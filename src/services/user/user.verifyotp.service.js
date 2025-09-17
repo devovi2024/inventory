@@ -1,24 +1,35 @@
-const userVerifyOtpService = async (req, OTPModel) => {
-    try {
-        const { email, otp } = req.body;
-        const statusUpdate = 1;
-        let status = 0;
+const userVerifyOtpService = async ({ email, otp }, OTPModel) => {
+  try {
 
-        const otpRecord = await OTPModel.findOne({ email, otp, status: 0 });
+    const otpRecord = await OTPModel.findOne({
+      email,
+      otp: otp.toString(),
+      status: 0
+    }).sort({ createdDate: -1 }); 
 
-        if (otpRecord) {
-            await OTPModel.updateOne(
-                { _id: otpRecord._id },
-                { $set: { status: statusUpdate } }
-            );
-
-            status = 1;
-            return { status, message: "OTP verified successfully" };
-        } else {
-            return { status, message: "Invalid OTP" };
-        }
-
-    } catch (error) {
-        return { status: 0, message: error.message };
+    if (!otpRecord) {
+      return {
+        statusCode: 400, 
+        status: "fail",
+        message: "Invalid OTP"
+      };
     }
+
+    otpRecord.status = 1;
+    await otpRecord.save();
+
+    return {
+      statusCode: 200,    
+      status: "success",
+      message: "OTP verified successfully"
+    };
+  } catch (error) {
+    return {
+      statusCode: 500,  
+      status: "error",
+      message: error.message
+    };
+  }
 };
+
+export default userVerifyOtpService;

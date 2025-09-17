@@ -11,7 +11,7 @@ const SendEmailUtility = async (to, text, subject) => {
     });
 
     const mailOptions = {
-      from: `"Task Manager" <${process.env.EMAIL_USER}>`,
+      from: `"inventory" <${process.env.EMAIL_USER}>`,
       to,
       subject,
       text,

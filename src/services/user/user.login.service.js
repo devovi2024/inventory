@@ -1,4 +1,4 @@
-const CreateToken = require("../../utility/CreateToken.js");
+import CreateToken from "../../utility/CreateToken.js";
 
 const userLoginService = async (Request, DataModel) => {
     try {
@@ -32,4 +32,4 @@ const userLoginService = async (Request, DataModel) => {
     }
 };
 
-module.exports = userLoginService;
+export default userLoginService;

@@ -1,5 +1,6 @@
 import userCreateService from "../../services/user/user.create.service.js";
-import { userDetailsService } from "../../services/user/user.details.service.js";
+import userDetailsService from "../../services/user/user.details.service.js";
+
 import userLoginService from "../../services/user/user.login.service.js";
 import userResetService from "../../services/user/user.reset.service.js";
 import userUpdateService from "../../services/user/user.update.service.js";
@@ -59,24 +60,26 @@ export const UserController = {
             res.status(500).json({ status: "error", message: "Server error" });
         }
     },
-
     verifyEmail: async (req, res) => {
-        try {
-            const result = await userVerifyEmailService(req, UserModel);
-            res.status(result.statusCode).json(result);
-        } catch (error) {
-            console.error(error);
-            res.status(500).json({ status: "error", message: "Server error" });
-        }
+    try {
+        const result = await userVerifyEmailService(req, UserModel);
+        res.status(result.statusCode).json(result);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ status: "error", message: "Server error" });
+    }
     },
 
-    verifyOtp: async (req, res) => {
-        try {
-            const result = await userVerifyOtpService(req, OTPModel);
-            res.status(result.statusCode).json(result);
-        } catch (error) {
-            console.error(error);
-            res.status(500).json({ status: "error", message: "Server error" });
-        }
-    }
+
+verifyOtp: async (req, res) => {
+  try {
+    const { email, otp } = req.params;  
+    const result = await userVerifyOtpService({ email, otp }, OTPModel); 
+    res.status(result.statusCode).json(result);
+  } catch (error) {
+    res.status(500).json({ status: "error", message: "Server error" });
+  }
+}
+
+
 };

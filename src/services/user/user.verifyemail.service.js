@@ -8,11 +8,10 @@ const userVerifyEmailService = async (req, UserModel) => {
 
     const userExists = await UserModel.findOne({ email });
     if (!userExists) {
-      return { status: "fail", message: "User not found" };
+      return { statusCode: 404, status: "fail", message: "User not found" };
     }
 
     await OTPModel.updateMany({ email, status: 0 }, { status: 2 });
-
     await OTPModel.create({ email, otp: OTPCode, status: 0 });
 
     await SendEmailUtility(
@@ -21,10 +20,10 @@ const userVerifyEmailService = async (req, UserModel) => {
       "Inventory Verification"
     );
 
-    return { status: "success", message: "OTP sent successfully" };
+    return { statusCode: 200, status: "success", message: "OTP sent successfully" };
 
   } catch (error) {
-    return { status: "error", message: error.message };
+    return { statusCode: 500, status: "error", message: error.message };
   }
 };
 

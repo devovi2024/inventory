@@ -1,8 +1,8 @@
-export const userDetailsService = async (Request, DataModel) => {
+const userDetailsService = async (Request, DataModel) => {
     try {
         let data = await DataModel.aggregate([
             { $match: { email: Request.headers['email'] } },
-            { $project: { password: 0, __v: 0 } } 
+            { $project: { password: 0, __v: 0 } }
         ]);
 
         if (!data || data.length === 0) {
@@ -14,3 +14,5 @@ export const userDetailsService = async (Request, DataModel) => {
         return { statusCode: 500, status: "fail", message: error.toString() };
     }
 };
+
+export default userDetailsService;
