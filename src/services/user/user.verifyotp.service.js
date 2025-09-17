@@ -1,23 +1,19 @@
-const userVerifyOtpService = async (Request, DataModel) => {
+const userVerifyOtpService = async (req, OTPModel) => {
     try {
-        const email = Request.body.email;
-        const OTPCode = Request.body.otp;
+        const { email, otp } = req.body;
         const statusUpdate = 1;
         let status = 0;
 
-        const OTPCount = await DataModel.aggregate([
-            { $match: { email: email, otp: OTPCode, status: 0 } },
-            { $count: "total" }
-        ]);
+        const otpRecord = await OTPModel.findOne({ email, otp, status: 0 });
 
-        if (OTPCount.length > 0) {
-            const OTPUpdate = await DataModel.updateOne(
-                { email: email, otp: OTPCode },
+        if (otpRecord) {
+            await OTPModel.updateOne(
+                { _id: otpRecord._id },
                 { $set: { status: statusUpdate } }
             );
 
             status = 1;
-            return { status, message: "OTP verified successfully", data: OTPUpdate };
+            return { status, message: "OTP verified successfully" };
         } else {
             return { status, message: "Invalid OTP" };
         }
@@ -26,5 +22,3 @@ const userVerifyOtpService = async (Request, DataModel) => {
         return { status: 0, message: error.message };
     }
 };
-
-export default userVerifyOtpService;

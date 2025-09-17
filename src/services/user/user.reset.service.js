@@ -1,40 +1,35 @@
-const OTPModel = require("../../models/OTPModel");
+import OTPModel from "../../models/Users/otp.model.js";
 
-const userResetPasswordService = async (Request, DataModel) => {
-    const email = Request.body['email'];
-    const OTPCode = Request.body['OTP'];
-    const NewPass = Request.body['password'];
-    const statusUpdate = 1;
+const userResetPasswordService = async (req, UserModel) => {
+    const { email, OTP: OTPCode, password: NewPass } = req.body;
 
     try {
-        const OTPUsedCount = await OTPModel.aggregate([
-            { $match: { email: email, otp: OTPCode, status: 0 } }
-        ]);
-
-        if (OTPUsedCount.length > 0) {
-            const passwordUpdate = await DataModel.updateOne(
-                { email: email },
-                { $set: { password: NewPass } }
-            );
-
-            await OTPModel.updateOne(
-                { email: email, otp: OTPCode },
-                { $set: { status: statusUpdate } }
-            );
-
+        const otpRecord = await OTPModel.findOne({ email, otp: OTPCode, status: 0 });
+        if (!otpRecord) {
             return {
-                statusCode: 200,
-                status: "success",
-                message: "Password updated successfully",
-                data: passwordUpdate
+                statusCode: 400,
+                status: "fail",
+                message: "Expired or invalid OTP"
             };
-        } else {
-            return { statusCode: 400, status: "fail", message: "expired OTP" };
         }
+
+        await UserModel.updateOne(
+            { email },
+            { $set: { password: NewPass } }
+        );
+
+        await OTPModel.findByIdAndUpdate(otpRecord._id, { status: 1 });
+
+        return {
+            statusCode: 200,
+            status: "success",
+            message: "Password updated successfully"
+        };
+
     } catch (error) {
         console.error(error);
-        return { statusCode: 500, status: "fail", message: error.toString() };
+        return { statusCode: 500, status: "fail", message: error.message };
     }
 };
 
-module.exports = userResetPasswordService;
+export default userResetPasswordService;

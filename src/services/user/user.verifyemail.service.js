@@ -1,26 +1,31 @@
-const OTPModel = require('../../models/OTPModel'); 
-const SendEmailUtility = require('../../utility/SendEmailUtility');
+import OTPModel from "../../models/Users/otp.model.js";
+import SendEmailUtility from "../../utility/SendEmailUtility.js";
 
-const userVerifyEmailService = async (Request, DataModel) => {
-    try {
-        let email = Request.params.email;
-        let OTPCode = Math.floor(1000 + Math.random() * 9000);
+const userVerifyEmailService = async (req, UserModel) => {
+  try {
+    const email = req.params.email;
+    const OTPCode = Math.floor(1000 + Math.random() * 9000).toString();
 
-        let UserCount = await DataModel.aggregate([
-            { $match: { email: email } },
-            { $count: "total" }
-        ]);
-
-        if (UserCount.length > 0) {
-            await OTPModel.create({ email: email, otp: OTPCode });
-            let SendEmail = await SendEmailUtility(email, "Your PIN code is " + OTPCode, "Inventory");
-            return { status: "success", data: SendEmail };
-        } else {
-            return { status: "fail", message: "User not found" };
-        }
-    } catch (error) {
-        return { status: "error", message: error.message };
+    const userExists = await UserModel.findOne({ email });
+    if (!userExists) {
+      return { status: "fail", message: "User not found" };
     }
+
+    await OTPModel.updateMany({ email, status: 0 }, { status: 2 });
+
+    await OTPModel.create({ email, otp: OTPCode, status: 0 });
+
+    await SendEmailUtility(
+      email,
+      `Your PIN code is ${OTPCode}`,
+      "Inventory Verification"
+    );
+
+    return { status: "success", message: "OTP sent successfully" };
+
+  } catch (error) {
+    return { status: "error", message: error.message };
+  }
 };
 
 export default userVerifyEmailService;

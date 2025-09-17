@@ -1,4 +1,4 @@
-const nodemailer = require("nodemailer");
+import nodemailer from "nodemailer";
 
 const SendEmailUtility = async (to, text, subject) => {
   try {
@@ -6,7 +6,7 @@ const SendEmailUtility = async (to, text, subject) => {
       service: "gmail",
       auth: {
         user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS, 
+        pass: process.env.EMAIL_PASS,
       },
     });
 
@@ -26,4 +26,4 @@ const SendEmailUtility = async (to, text, subject) => {
   }
 };
 
-module.exports = SendEmailUtility;
+export default SendEmailUtility;

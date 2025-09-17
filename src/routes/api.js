@@ -1,8 +1,17 @@
-const express = require("express");
+import express from "express";
 const router = express.Router();
 
-router.get("/test", (req, res) => {
-  res.json({ status: "success", message: "API is working" });
-});
+import { UserController } from "../controllers/Users/user.controller.js";
+import authVerifyMiddleware from "../middlewares/authverify.middleware.js";
 
-module.exports = router;
+// User routes
+router.post("/create", UserController.create);
+router.post("/login", UserController.login);
+router.post("/verify-email", UserController.verifyEmail);
+router.post("/verify-otp", UserController.verifyOtp);
+router.post("/reset", UserController.reset);
+
+router.get("/details", authVerifyMiddleware, UserController.details);
+router.put("/update", authVerifyMiddleware, UserController.update);
+
+export default router;
