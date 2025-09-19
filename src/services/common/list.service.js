@@ -2,21 +2,31 @@ const listService = async (Request, DataModel, SearchArray) => {
     try {
         let pageNo = Number(Request.params.pageNo) || 1;
         let perPage = Number(Request.params.perPage) || 10;
-        let searchValue = Request.params.searchKeyword;
+        let searchValue = Request.params.searchKeyword || "0";
         let UserEmail = Request.headers['email'];
 
         let skipRow = (pageNo - 1) * perPage;
         let data = [];
 
-        if(searchValue !== "0" && SearchArray.length) {
-            let searchQuery = {$or: SearchArray};
+        if (searchValue !== "0" && SearchArray.length) {
+            let searchQuery = { $or: SearchArray.map(field => ({ [field]: { $regex: searchValue, $options: "i" } })) };
             data = await DataModel.aggregate([
-                {$match: {UserEmail: UserEmail}},
-                {$match: searchQuery},
+                { $match: { UserEmail: UserEmail } },
+                { $match: searchQuery },
                 {
                     $facet: {
-                        Total: [{$count: "count"}],
-                        Rows: [{$skip: skipRow}, {$limit: perPage}]
+                        Total: [{ $count: "count" }],
+                        Rows: [{ $skip: skipRow }, { $limit: perPage }]
+                    }
+                }
+            ]);
+        } else {
+            data = await DataModel.aggregate([
+                { $match: { UserEmail: UserEmail } },
+                {
+                    $facet: {
+                        Total: [{ $count: "count" }],
+                        Rows: [{ $skip: skipRow }, { $limit: perPage }]
                     }
                 }
             ]);
@@ -32,8 +42,9 @@ const listService = async (Request, DataModel, SearchArray) => {
         return {
             statusCode: 400,
             status: "fail",
-            message: error.toString()
+            message: error.message
         };
     }
-}
+};
+
 export default listService;

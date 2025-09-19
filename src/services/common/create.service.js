@@ -14,8 +14,9 @@ const createService = async (Request, DataModel) => {
         return {
             statusCode: 400,
             status: "fail",
-            message: error.toString()
+            message: error.message
         };
     }
 };
+
 export default createService;

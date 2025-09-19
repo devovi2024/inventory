@@ -5,9 +5,11 @@ const dropdownService = async (Request, DataModel, Projection) => {
             { $match: { UserEmail: userEmail } },
             { $project: Projection }
         ]);
-        return { status: "success", data: data };
+
+        return { statusCode: 200, status: "success", data: data };
     } catch (error) {
-        return { status: "fail", data: error.toString() };
+        return { statusCode: 400, status: "fail", message: error.message };
     }
-}
+};
+
 export default dropdownService;

@@ -13,7 +13,7 @@ const updateService = async (Request, DataModel) => {
             return {
                 statusCode: 404,
                 status: "fail",
-                message: "No document found update"
+                message: "No document found to update"
             };
         }
 
@@ -26,8 +26,9 @@ const updateService = async (Request, DataModel) => {
         return {
             statusCode: 400,
             status: "fail",
-            message: error.toString()
+            message: error.message
         };
     }
 };
+
 export default updateService;

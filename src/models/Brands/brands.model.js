@@ -1,7 +1,8 @@
 import mongoose from 'mongoose';
+
 const DataSchema = new mongoose.Schema({
-    UserEmail: { type: String },
-    Name: { type: String, unique: true },
+    UserEmail: { type: String, required: true },
+    Name: { type: String, unique: true, required: true },
     CreateDate: { type: Date, default: Date.now }
 }, { versionKey: false });
 
