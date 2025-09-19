@@ -1,16 +1,16 @@
 const listOneJoinService = async (Request, DataModel, SearchArray, JoinStage) => {
     try {
-        let pageNo = Number(Request.params.pageNo);
-        let perPage = Number(Request.params.perPage);
-        let searchValue = Request.params.searchKeyword;
+        let pageNo = Number(Request.params.pageNo) || 1;
+        let perPage = Number(Request.params.perPage) || 10;
+        let searchValue = Request.params.searchKeyword || "";
         let UserEmail = Request.headers['email'];
         let skipRow = (pageNo - 1) * perPage;
 
         let data;
 
-        if (searchValue !== "0") {
+        if (searchValue && SearchArray.length) {
             data = await DataModel.aggregate([
-                { $match: { UserEmail: UserEmail } },
+                { $match: { UserEmail } },
                 { $match: { $or: SearchArray } },
                 JoinStage,
                 { $skip: skipRow },
@@ -18,17 +18,18 @@ const listOneJoinService = async (Request, DataModel, SearchArray, JoinStage) =>
             ]);
         } else {
             data = await DataModel.aggregate([
-                { $match: { UserEmail: UserEmail } },
+                { $match: { UserEmail } },
                 JoinStage,
                 { $skip: skipRow },
                 { $limit: perPage }
             ]);
         }
 
-        return { status: "success", data: data };
+        return { status: "success", data };
 
     } catch (error) {
         return { status: "fail", data: error.toString() };
     }
 };
+
 export default listOneJoinService;

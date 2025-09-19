@@ -9,6 +9,7 @@ import CategoriesController from "../controllers/Categories/categories.controlle
 import CustomersController from "../controllers/Customers/customer.controller.js";
 import SuppliersController from "../controllers/Suppliers/supplier.controller.js";
 import ExpenseController from "../controllers/Expenses/expense.controller.js";
+import ProductController from "../controllers/Products/product.controller.js"; // <-- added
 
 // User
 router.post("/create", UserController.create);
@@ -47,5 +48,10 @@ router.get("/supplier/dropdown", authVerifyMiddleware, SuppliersController.dropd
 router.post("/expense/create", authVerifyMiddleware, ExpenseController.createExpense);
 router.put("/expense/update/:id", authVerifyMiddleware, ExpenseController.updateExpense);
 router.get("/expense/list/:pageNo/:perPage/:searchKeyword", authVerifyMiddleware, ExpenseController.expenseList);
+
+// Product
+router.post("/product/create", authVerifyMiddleware, ProductController.createProduct);
+router.put("/product/update/:id", authVerifyMiddleware, ProductController.updateProduct);
+router.get("/product/list/:pageNo/:perPage/:searchKeyword", authVerifyMiddleware, ProductController.productList);
 
 export default router;
