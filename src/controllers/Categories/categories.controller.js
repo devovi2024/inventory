@@ -3,6 +3,8 @@ import createService from "../../services/common/create.service.js";
 import updateService from "../../services/common/update.service.js";
 import listService from "../../services/common/list.service.js";
 import dropdownService from "../../services/common/dropdown.service.js";
+import checkAssociateService from "../../services/common/checkassociate.service.js";
+
 
 export async function createCategory(req, res) {
     let result = await createService(req, CategoriesModel);
@@ -26,9 +28,18 @@ export async function dropdownCategories(req, res) {
     return res.status(result.statusCode).json(result);
 }
 
+export const deleteCategory = async (req, res) => {
+    const isAssociated = await checkAssociateService({ CategoryID: mongoose.Types.ObjectId(req.params.id) }, ProductModel);
+    if (isAssociated) 
+        return res.status(400).json({ status: "fail", message: "Category is associated with some products. Cannot delete." });
+    const result = await deleteService(req, CategoriesModel); res.status(result.statusCode).json(result);
+};
+
+
 export default {
     createCategory,
     updateCategory,
     listCategories,
-    dropdownCategories
+    dropdownCategories,
+    deleteCategory
 };

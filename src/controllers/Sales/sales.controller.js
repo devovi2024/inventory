@@ -2,6 +2,7 @@ import ParentModel from "../../models/Sales/sales.model.js";
 import ChildModel from "../../models/Sales/salesproduct.model.js";
 import createParentChildService from "../../services/common/createparentchild.service.js";
 import listOneJoinService from "../../services/common/listonejoin.service.js";
+import deleteParentChildService from "../../services/common/deleteparent.service.js";
 
 const createSales = async (req, res) => {
     try {
@@ -37,6 +38,7 @@ const salesList = async (req, res) => {
     try {
         const searchKeyword = req.params.searchKeyword || "";
         const SearchRgx = { $regex: searchKeyword, $options: "i" };
+
         const SearchArray = [
             { Note: SearchRgx },
             { "Customer.CustomerName": SearchRgx },
@@ -66,4 +68,16 @@ const salesList = async (req, res) => {
     }
 };
 
-export default { createSales, salesList };
+const salesDelete = async (req, res) => {
+    try {
+        const Result = await deleteParentChildService(req, ParentModel, ChildModel, "SalesID");
+        return res.status(200).json(Result);
+    } catch (error) {
+        return res.status(500).json({
+            message: "Delete failed",
+            error: error.message,
+        });
+    }
+};
+
+export default { createSales, salesList, salesDelete };

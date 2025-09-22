@@ -6,35 +6,23 @@ const createParentChildService = async (Request, ParentModel, ChildModel, JoinPr
     try {
         let Parent = Request.body["Parent"];
         Parent.UserEmail = Request.headers["email"];
+        const parentResult = await ParentModel.create([Parent], { session });
 
-        let parentResult;
-        try {
-            parentResult = await ParentModel.create([Parent], { session });
-        } catch (error) {
-            parentResult = { error: "Parent creation failed", details: error.toString() };
-        }
-
-        let childResult;
-        try {
-            let Childs = Request.body["Childs"];
-            Childs = Childs.map(child => {
-                child.UserEmail = Request.headers["email"];
-                if (parentResult && parentResult[0]?._id) child[JoinPropertyName] = parentResult[0]._id;
-                return child;
-            });
-            childResult = await ChildModel.insertMany(Childs, { session });
-        } catch (error) {
-            childResult = { error: "Child creation failed", details: error.toString() };
-        }
+        let Childs = Request.body["Childs"].map(child => {
+            child.UserEmail = Request.headers["email"];
+            child[JoinPropertyName] = parentResult[0]._id;
+            return child;
+        });
+        const childResult = await ChildModel.insertMany(Childs, { session });
 
         await session.commitTransaction();
         session.endSession();
 
-        return { status: "completed", parent: parentResult, childs: childResult };
+        return { status: "success", parent: parentResult, childs: childResult };
     } catch (error) {
         await session.abortTransaction();
         session.endSession();
-        return { status: "fail", data: error.toString() };
+        return { status: "fail", error: error.message };
     }
 };
 

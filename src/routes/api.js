@@ -1,4 +1,4 @@
-import express from "express";
+import express from "express"; 
 const router = express.Router();
 
 import UserController from "../controllers/Users/user.controller.js";
@@ -29,45 +29,54 @@ router.post("/brand/create", authVerifyMiddleware, BrandsController.createBrand)
 router.put("/brand/update/:id", authVerifyMiddleware, BrandsController.updateBrand);
 router.get("/brand/list/:pageNo/:perPage/:searchKeyword", authVerifyMiddleware, BrandsController.listBrand);
 router.get("/brand/dropdown", authVerifyMiddleware, BrandsController.dropdownBrand);
+router.get("/brand/delete/:id", authVerifyMiddleware, BrandsController.deleteBrand);
 
 // ===== Category Routes =====
 router.post("/category/create", authVerifyMiddleware, CategoriesController.createCategory);
 router.put("/category/update/:id", authVerifyMiddleware, CategoriesController.updateCategory);
 router.get("/category/list/:pageNo/:perPage/:searchKeyword", authVerifyMiddleware, CategoriesController.listCategories);
 router.get("/category/dropdown", authVerifyMiddleware, CategoriesController.dropdownCategories);
+router.get("/category/delete/:id", authVerifyMiddleware, CategoriesController.deleteCategory);
 
 // ===== Customer Routes =====
 router.post("/customer/create", authVerifyMiddleware, CustomersController.createCustomer);
 router.put("/customer/update/:id", authVerifyMiddleware, CustomersController.updateCustomer);
 router.get("/customer/list/:pageNo/:perPage/:searchKeyword", authVerifyMiddleware, CustomersController.listCustomers);
 router.get("/customer/dropdown", authVerifyMiddleware, CustomersController.dropdownCustomers);
+router.get("/customer/delete/:id", authVerifyMiddleware, CustomersController.deleteCustomer); 
 
 // ===== Supplier Routes =====
 router.post("/supplier/create", authVerifyMiddleware, SuppliersController.createSupplier);
 router.put("/supplier/update/:id", authVerifyMiddleware, SuppliersController.updateSupplier);
 router.get("/supplier/list/:pageNo/:perPage/:searchKeyword", authVerifyMiddleware, SuppliersController.listSuppliers);
 router.get("/supplier/dropdown", authVerifyMiddleware, SuppliersController.dropdownSuppliers);
+router.get("/supplier/delete/:id", authVerifyMiddleware, SuppliersController.deleteSupplier); 
 
 // ===== Expense Routes =====
 router.post("/expense/create", authVerifyMiddleware, ExpenseController.createExpense);
 router.put("/expense/update/:id", authVerifyMiddleware, ExpenseController.updateExpense);
 router.get("/expense/list/:pageNo/:perPage/:searchKeyword", authVerifyMiddleware, ExpenseController.expenseList);
+router.get("/expense/delete/:id", authVerifyMiddleware, ExpenseController.deleteExpense);  
 
 // ===== Product Routes =====
 router.post("/product/create", authVerifyMiddleware, ProductController.createProduct);
 router.put("/product/update/:id", authVerifyMiddleware, ProductController.updateProduct);
 router.get("/product/list/:pageNo/:perPage/:searchKeyword", authVerifyMiddleware, ProductController.productList);
+router.get("/product/delete/:id", authVerifyMiddleware, ProductController.deleteProduct); 
 
 // ===== Purchase Routes =====
 router.post("/purchase/create", authVerifyMiddleware, PurchaseController.createPurchase);
 router.get("/purchase/list/:searchKeyword", authVerifyMiddleware, PurchaseController.purchaseList);
+router.get("/purchase/delete/:id", authVerifyMiddleware, PurchaseController.purchaseDelete);
 
 // ===== Sales Routes =====
 router.post("/sales/create", authVerifyMiddleware, SalesController.createSales);
 router.get("/sales/list/:searchKeyword", authVerifyMiddleware, SalesController.salesList);
+router.get("/sales/delete/:id", authVerifyMiddleware, SalesController.salesDelete);
 
 // ===== Return Routes =====
 router.post("/return/create", authVerifyMiddleware, ReturnController.createReturn);
 router.get("/return/list/:searchKeyword", authVerifyMiddleware, ReturnController.returnList);
+router.get("/return/delete/:id", authVerifyMiddleware, ReturnController.returnDelete);
 
 export default router;

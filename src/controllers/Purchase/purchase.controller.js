@@ -1,6 +1,7 @@
 import ParentModel from "../../models/Purchase/purchase.model.js";
 import ChildModel from "../../models/Purchase/purchaseproduct.model.js";
 import createParentChildService from "../../services/common/createparentchild.service.js";
+import deleteParentChildService from "../../services/common/deleteparent.service.js";
 
 const createPurchase = async (req, res) => {
     try {
@@ -68,4 +69,16 @@ const purchaseList = async (req, res) => {
     }
 };
 
-export default { createPurchase, purchaseList };
+const purchaseDelete = async (req, res) => {
+    try {
+        const Result = await deleteParentChildService(req, ParentModel, ChildModel, "PurchaseID");
+        return res.status(200).json(Result);
+    } catch (error) {
+        return res.status(500).json({
+            message: "Delete failed",
+            error: error.message,
+        });
+    }
+};
+
+export default { createPurchase, purchaseList, purchaseDelete };

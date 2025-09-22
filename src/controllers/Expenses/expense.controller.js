@@ -2,6 +2,7 @@ import ExpenseModel from "../../models/Expenses/expense.model.js";
 import createService from "../../services/common/create.service.js";
 import updateService from "../../services/common/update.service.js";
 import listOneJoinService from "../../services/common/listonejoin.service.js";
+import deleteService from "../../services/common/delete.service.js";
 
 export async function createExpense(req, res) {
     let result = await createService(req, ExpenseModel);
@@ -15,7 +16,7 @@ export async function updateExpense(req, res) {
 
 export async function expenseList(req, res) {
     try {
-        let searchKeyword = req.params.searchKeyword;
+        let searchKeyword = req.params.searchKeyword || "";
         let SearchRgx = { $regex: searchKeyword, $options: "i" };
         let SearchArray = [
             { Note: SearchRgx },
@@ -36,8 +37,18 @@ export async function expenseList(req, res) {
     }
 }
 
+export async function deleteExpense(req, res) {
+    try {
+        const result = await deleteService(req, ExpenseModel);
+        return res.status(200).json(result);
+    } catch (error) {
+        return res.status(500).json({ status: "fail", error: error.message });
+    }
+}
+
 export default {
     createExpense,
     updateExpense,
-    expenseList
+    expenseList,
+    deleteExpense
 };
