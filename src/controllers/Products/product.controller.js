@@ -8,6 +8,7 @@ import ReturnProductModel from "../../models/Return/returnproduct.model.js";
 import PurchaseModel from "../../models/Purchase/purchase.model.js";
 import SalesModel from "../../models/Sales/sales.model.js";
 import deleteService from "../../services/common/delete.service.js";
+import detailByIDService from "../../services/common/detailbyid.service.js";
 
 export async function createProduct(req, res) {
     let result = await createService(req, ProductModel);
@@ -66,9 +67,20 @@ export async function deleteProduct(req, res) {
     }
 }
 
+export async function productDetails(req, res) {
+    try {
+        const result = await detailByIDService(req, ProductModel);
+        return res.status(200).json(result);
+    } catch (error) {
+        return res.status(500).json({ status: "fail", error: error.message });
+    }
+}
+
 export default {
     createProduct,
     updateProduct,
     productList,
-    deleteProduct
+    deleteProduct,
+    productDetails
+
 };

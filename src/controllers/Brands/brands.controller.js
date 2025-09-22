@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from "mongoose"; 
 import BrandsModel from "../../models/Brands/brands.model.js";
 import createService from "../../services/common/create.service.js";
 import updateService from "../../services/common/update.service.js";
@@ -6,11 +6,20 @@ import listService from "../../services/common/list.service.js";
 import dropdownService from "../../services/common/dropdown.service.js";
 import checkAssociateService from "../../services/common/checkassociate.service.js";
 import deleteService from "../../services/common/delete.service.js";
-import ProductModel from "../../models/Products/product.model.js";
+import detailByIDService from "../../services/common/detailbyid.service.js";
 
 export const createBrand = async (req, res) => {
     const result = await createService(req, BrandsModel);
     res.status(result.statusCode).json(result);
+};
+
+export const brandDetails = async (req, res) => {
+    try {
+        const result = await detailByIDService(req, BrandsModel);
+        res.status(200).json(result);
+    } catch (error) {
+        res.status(500).json({ status: "fail", error: error.message });
+    }
 };
 
 export const updateBrand = async (req, res) => {
@@ -19,7 +28,7 @@ export const updateBrand = async (req, res) => {
 };
 
 export const listBrand = async (req, res) => {
-    const SearchArray = ["Name"]; 
+    const SearchArray = ["Name"];
     const result = await listService(req, BrandsModel, SearchArray);
     res.status(result.statusCode).json(result);
 };
@@ -47,7 +56,7 @@ export const deleteBrand = async (req, res) => {
             });
         }
 
-        const result = await deleteService(req, ProductModel);
+        const result = await deleteService(req, BrandsModel);
         res.status(200).json(result);
 
     } catch (error) {
@@ -57,6 +66,7 @@ export const deleteBrand = async (req, res) => {
 
 export default {
     createBrand,
+    brandDetails,
     updateBrand,
     listBrand,
     dropdownBrand,

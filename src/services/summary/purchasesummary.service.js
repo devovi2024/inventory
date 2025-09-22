@@ -1,5 +1,5 @@
-import PurchaseModel from '../../models/Purchase/purchase.model'
-import SalesModel from '../../models/Sales/sales.model'
+import PurchaseModel from '../../models/Purchase/purchase.model.js'
+import SalesModel from '../../models/Sales/sales.model.js'
 
 const purchaseSalesSummaryService = async (Request) => {
     try {

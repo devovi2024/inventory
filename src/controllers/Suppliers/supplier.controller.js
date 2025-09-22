@@ -7,7 +7,7 @@ import dropdownService from "../../services/common/dropdown.service.js";
 import checkAssociateService from "../../services/common/checkassociate.service.js";
 import deleteService from "../../services/common/delete.service.js";
 import PurchaseModel from "../../models/Purchase/purchase.model.js"; 
-
+import detailByIDService from "../../services/common/detailbyid.service.js"
 export async function createSupplier(req, res) {
     let result = await createService(req, SuppliersModel);
     return res.status(result.statusCode).json(result);
@@ -50,10 +50,21 @@ export async function deleteSupplier(req, res) {
     }
 }
 
+export async function supplierDetails(req, res) {
+    try {
+        const result = await detailByIDService(req, SuppliersModel);
+        return res.status(200).json(result);
+    } catch (error) {
+        return res.status(500).json({ status: "fail", error: error.message });
+    }
+}
+
+
 export default {
     createSupplier,
     updateSupplier,
     listSuppliers,
     dropdownSuppliers,
-    deleteSupplier
+    deleteSupplier,
+    supplierDetails
 };

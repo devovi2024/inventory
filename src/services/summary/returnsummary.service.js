@@ -1,4 +1,4 @@
-import ReturnModel from '../../models/Return/return.model'
+import ReturnModel from '../../models/Return/return.model.js'
 
 const returnSummaryService = async (Request) => {
     try {

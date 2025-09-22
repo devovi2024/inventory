@@ -1,4 +1,4 @@
-import ExpenseModel from '../../models/Expenses/expense.model'
+import ExpenseModel from '../../models/Expenses/expense.model.js'
 const expenseSummaryService = async (Request) => {
     try {
         let UserEmail = Request.headers['email'];

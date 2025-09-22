@@ -15,6 +15,12 @@ import PurchaseController from "../controllers/Purchase/purchase.controller.js";
 import SalesController from "../controllers/Sales/sales.controller.js";
 import ReturnController from "../controllers/Return/return.controller.js";
 
+// ===== Import Summary Controllers =====
+import expenseSummaryService from "../services/summary/expensesummary.service.js";
+import purchaseSalesSummaryService from "../services/summary/purchasesummary.service.js";
+import salesSummaryService from "../services/summary/salessummary.service.js";
+import returnSummaryService from "../services/summary/returnsummary.service.js";
+
 // ===== User Routes =====
 router.post("/create", UserController.createUser);
 router.post("/login", UserController.loginUser);
@@ -30,6 +36,7 @@ router.put("/brand/update/:id", authVerifyMiddleware, BrandsController.updateBra
 router.get("/brand/list/:pageNo/:perPage/:searchKeyword", authVerifyMiddleware, BrandsController.listBrand);
 router.get("/brand/dropdown", authVerifyMiddleware, BrandsController.dropdownBrand);
 router.get("/brand/delete/:id", authVerifyMiddleware, BrandsController.deleteBrand);
+router.get("/brand/details/:id", authVerifyMiddleware, BrandsController.brandDetails);
 
 // ===== Category Routes =====
 router.post("/category/create", authVerifyMiddleware, CategoriesController.createCategory);
@@ -57,6 +64,46 @@ router.post("/expense/create", authVerifyMiddleware, ExpenseController.createExp
 router.put("/expense/update/:id", authVerifyMiddleware, ExpenseController.updateExpense);
 router.get("/expense/list/:pageNo/:perPage/:searchKeyword", authVerifyMiddleware, ExpenseController.expenseList);
 router.get("/expense/delete/:id", authVerifyMiddleware, ExpenseController.deleteExpense);  
+
+// ===== Expense Summary Route =====
+router.get("/expense/summary", authVerifyMiddleware, async (req, res) => {
+    try {
+        const summary = await expenseSummaryService(req);
+        return res.json(summary);
+    } catch (e) {
+        return res.status(500).json({ error: e.message });
+    }
+});
+
+// ===== Purchase/Sales Summary Route =====
+router.get("/purchase-sales/summary", authVerifyMiddleware, async (req, res) => {
+    try {
+        const summary = await purchaseSalesSummaryService(req);
+        return res.json(summary);
+    } catch (e) {
+        return res.status(500).json({ error: e.message });
+    }
+});
+
+// ===== Sales Summary Route =====
+router.get("/sales/summary", authVerifyMiddleware, async (req, res) => {
+    try {
+        const summary = await salesSummaryService(req);
+        return res.json(summary);
+    } catch (e) {
+        return res.status(500).json({ error: e.message });
+    }
+});
+
+// ===== Return Summary Route =====
+router.get("/return/summary", authVerifyMiddleware, async (req, res) => {
+    try {
+        const summary = await returnSummaryService(req);
+        return res.json(summary);
+    } catch (e) {
+        return res.status(500).json({ error: e.message });
+    }
+});
 
 // ===== Product Routes =====
 router.post("/product/create", authVerifyMiddleware, ProductController.createProduct);

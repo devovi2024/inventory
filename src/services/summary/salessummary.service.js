@@ -1,4 +1,4 @@
-import SalesModel from '../../models/Sales/sales.model'
+import SalesModel from '../../models/Sales/sales.model.js'
 
 const salesSummaryService = async (Request) => {
     try {

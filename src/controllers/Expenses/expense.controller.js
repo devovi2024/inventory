@@ -3,6 +3,7 @@ import createService from "../../services/common/create.service.js";
 import updateService from "../../services/common/update.service.js";
 import listOneJoinService from "../../services/common/listonejoin.service.js";
 import deleteService from "../../services/common/delete.service.js";
+import detailByIDService from "../../services/common/detailbyid.service.js";
 
 export async function createExpense(req, res) {
     let result = await createService(req, ExpenseModel);
@@ -46,9 +47,18 @@ export async function deleteExpense(req, res) {
     }
 }
 
+export async function expenseDetails(req, res) {
+    try {
+        const result = await detailByIDService(req, ExpenseModel);
+        return res.status(200).json(result);
+    } catch (error) {
+        return res.status(500).json({ status: "fail", error: error.message });
+    }
+}
 export default {
     createExpense,
     updateExpense,
     expenseList,
-    deleteExpense
+    deleteExpense,
+    expenseDetails
 };
